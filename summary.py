@@ -1,6 +1,5 @@
 import reading
 import writing
-import datetime
 
 
 class Summary:
@@ -58,7 +57,6 @@ class Summary:
                 print(f"tw4;{x}")
                 tw4 += int(x1[4])
 
-        # summary_date = datetime.datetime.now().strftime("%d/%m/%Y; %H:%M:%S")
         if (month >= 1) and (month <= 3):
             list_summary.append(f"Triwulan I {year};{tw1}")
             list_summary.append(f"Triwulan IV {year - 1};{tw4}")

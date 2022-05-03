@@ -8,25 +8,27 @@ import writing
 import reading
 
 print("===== Start Initialize =====")
-url = "https://galangdana.kitabisa.com/partners/bersamalawancorona"  # BersamaLawanCorona
+# url = "https://galangdana.kitabisa.com/partners/bersamalawancorona"  # BersamaLawanCorona
 # url = "https://galangdana.kitabisa.com/partners/daruratcovid2021"  # DaruratCOVID2021
 # url = "https://galangdana.kitabisa.com/partners/perempuanhadapicovid"  # PerempuanHadapiCovid
 # url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
+url = "https://galangdana.kitabisa.com/partners/kickandyheroes"  # Kick Andy Heroes_detail
 # url = "https://galangdana.kitabisa.com/partners/msract"  # Lets ACT Indonesia
+# url = "https://galangdana.kitabisa.com/partners/millennialsberkarya"  # Millennials Berkarya - Semen Indonesia#
 # url = "https://galangdana.kitabisa.com/partners/oxygenforindonesia"  # Oxygen for Indonesia
 # url = "https://galangdana.kitabisa.com/partners/bisabantusesama"  # Program #BisaBantuSesama
+# url = "https://galangdana.kitabisa.com/partners/ramadhan2021"  # Ramadhan Bersama Kitabisa #SalingJaga
 # url = "https://galangdana.kitabisa.com/partners/zakathub"  # ZakatHub by BAZNAS
-# url = "https://galangdana.kitabisa.com/partners/ramadhan2021"  # ZakatHub by BAZNAS
 
 uClient = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 page_html = urlopen(uClient).read()
 page_soup = Soup(page_html, "html.parser")
 partner_name = page_soup.find("h2", {"class": "align-center"}).text.replace("\n", "").strip()
 
-file_name_write = f"{partner_name}"
-file_name_write_url = f"{partner_name}_url"
-file_name_write_detail = f"{partner_name}_detail"
-file_name_write_url_remainder = f"{partner_name}_remainder"
+file_name_write = f"output/latest-news/{partner_name}"
+file_name_write_url = f"output/latest-news/{partner_name}_url"
+file_name_write_detail = f"output/latest-news/{partner_name}_detail"
+file_name_write_url_remainder = f"output/latest-news/{partner_name}_remainder"
 
 scroll = scrolling.Scrolling()
 scrap = scraping.Scraping()
@@ -78,6 +80,7 @@ if os.path.isfile(f"./{file_name_write_url_remainder}.csv"):  # Check file_name_
         print("===== Finish Checking File Remainder =====")
 
     # Create summary from file detail
+    print("==== Scraped data =====")
     summary.Summary().summary(file_name_write_detail)
 
 else:
@@ -133,4 +136,5 @@ else:
         print("===== Finish Checking File Remainder =====")
 
     # Create summary from file detail
+    print("==== Scraped data =====")
     summary.Summary().summary(file_name_write_detail)
