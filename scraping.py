@@ -15,6 +15,11 @@ class Scraping:
         self.list_update_content_p = []
         self.list_update_content_div = []
         self.list_url_scrapping = []
+        self.list_donatur = []
+        self.list_donasi = []
+        self.list_donor_time = []
+        self.list_url_donor = []
+        self.list_scrap_time = []
 
     def scrap(self, page_soup):
         # Set empty array
@@ -72,7 +77,7 @@ class Scraping:
             # Publisher name
             publisher_name = x.find(class_="style__PublisherName-sc-__sc-bl8jwv-7 kiEwbb")
             self.list_publisher_name.append(publisher_name.text.strip())
-            self.list_time.append(datetime.datetime.now().strftime("%d/%m/%Y; %H:%M:%S"))
+            self.list_time.append(datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
             self.list_url_scrapping.append(url_detail)
 
             # Update time
@@ -99,3 +104,15 @@ class Scraping:
             div_tag = x.find("div")
             update_content_div = div_tag.text.replace("\n", " ").replace(";", ",").strip()
             self.list_update_content_div.append(update_content_div)
+
+    def scrap_donor(self, page_soup_donor, url_donor):
+        content_soup = page_soup_donor.find_all("div", {"class": "style__DonorItem-sc-__sc-1exee2-4 fJHQYT"})
+        for x in content_soup:
+            donatur = x.find(class_="style__DonorName-sc-__sc-1exee2-7 dlOQEY")
+            donasi = x.find(class_="style__DonationAmount-sc-__sc-1exee2-8 fCbsWC")
+            donor_time = x.find(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
+            self.list_scrap_time.append(datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
+            self.list_donatur.append(donatur.text.strip())
+            self.list_donasi.append(donasi.text.replace("Rp", "").replace(".", "").strip())
+            self.list_donor_time.append(donor_time.text.strip())
+            self.list_url_donor.append(url_donor)

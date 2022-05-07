@@ -11,8 +11,8 @@ print("===== Start Initialize =====")
 # url = "https://galangdana.kitabisa.com/partners/bersamalawancorona"  # BersamaLawanCorona
 # url = "https://galangdana.kitabisa.com/partners/daruratcovid2021"  # DaruratCOVID2021
 # url = "https://galangdana.kitabisa.com/partners/perempuanhadapicovid"  # PerempuanHadapiCovid
-# url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
-url = "https://galangdana.kitabisa.com/partners/kickandyheroes"  # Kick Andy Heroes_detail
+url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
+# url = "https://galangdana.kitabisa.com/partners/kickandyheroes"  # Kick Andy Heroes_detail
 # url = "https://galangdana.kitabisa.com/partners/msract"  # Lets ACT Indonesia
 # url = "https://galangdana.kitabisa.com/partners/millennialsberkarya"  # Millennials Berkarya - Semen Indonesia
 # url = "https://galangdana.kitabisa.com/partners/oxygenforindonesia"  # Oxygen for Indonesia
@@ -27,7 +27,7 @@ partner_name = page_soup.find("h2", {"class": "align-center"}).text.replace("\n"
 
 file_name_write = f"output/donasi/{partner_name}"
 file_name_write_url = f"output/donasi/{partner_name}_url"
-file_name_write_detail = f"output/donasi/{partner_name}_detail"
+file_name_write_donor = f"output/donasi/{partner_name}_donor"
 file_name_write_url_remainder = f"output/donasi/{partner_name}_remainder"
 
 scroll = scrolling.Scrolling()
@@ -46,18 +46,20 @@ if os.path.isfile(f"./{file_name_write_url_remainder}.csv"):  # Check file_name_
     list_url = tuple(read.list_url)
     for x in list_url:
         print(f"{x}/donors")
-        url_detail = f"{x}/donors"
-        print("===== Start Scrolling Detail Page =====")
-        scroll.scroll_detail(url_detail)
-        print("===== Finish Scrolling Detail Page =====")
-        print("===== Start Scraping Detail Page =====")
-        scrap.scrap_detail(scroll.page_soup_detail, url_detail)
-        print("===== Finish Scraping Detail Page =====")
-        print("===== Start Writing Detail Page =====")
-        write.write_detail(file_name_write_detail, scrap.list_time, scrap.list_publisher_name, scrap.list_update_time,
-                           scrap.list_update_content_h4, scrap.list_update_content_p, scrap.list_update_content_div,
-                           scrap.list_url_scrapping)
-        print("===== Finish Writing Detail Page =====")
+        url_donor = f"{x}/donors"
+        print("===== Start Scrolling Donor Page =====")
+        scroll.scroll_donor(url_donor)
+        if scroll.validate_url:
+            print("\n===== Finish Scrolling Donor Page =====")
+            print("===== Start Scraping Donor Page =====")
+            scrap.scrap_donor(scroll.page_soup_donor, url_donor)
+            print("===== Finish Scraping Donor Page =====")
+            print("===== Start Writing Donor Page =====")
+            write.write_donor(file_name_write_donor, scrap.list_scrap_time, scrap.list_donatur, scrap.list_donasi,
+                              scrap.list_donor_time, scrap.list_url_donor)
+            print("===== Finish Writing Donor Page =====")
+        else:
+            print("===== Finish Scrolling Donor Page =====")
 
         # Remove url that has been scraped from the list_remainder
         for url in list_url:
@@ -79,9 +81,9 @@ if os.path.isfile(f"./{file_name_write_url_remainder}.csv"):  # Check file_name_
         print("===== All Remainder Url Has Been Scraped =====")
         print("===== Finish Checking File Remainder =====")
 
-    # Create summary from file detail
+    # Create summary from file donor
     print("==== Scraped data =====")
-    summary.Summary().summary(file_name_write_detail)
+    summary.Summary().summary_donor(file_name_write_donor)
 
 else:
     print("===== Start Scrolling =====")
@@ -102,18 +104,20 @@ else:
     list_url = tuple(read.list_url)
     for x in list_url:
         print(f"{x}/donors")
-        url_detail = f"{x}/donors"
-        print("===== Start Scrolling Detail Page =====")
-        scroll.scroll_detail(url_detail)
-        print("===== Finish Scrolling Detail Page =====")
-        print("===== Start Scraping Detail Page =====")
-        scrap.scrap_detail(scroll.page_soup_detail, url_detail)
-        print("===== Finish Scraping Detail Page =====")
-        print("===== Start Writing Detail Page =====")
-        write.write_detail(file_name_write_detail, scrap.list_time, scrap.list_publisher_name, scrap.list_update_time,
-                           scrap.list_update_content_h4, scrap.list_update_content_p, scrap.list_update_content_div,
-                           scrap.list_url_scrapping)
-        print("===== Finish Writing Detail Page =====")
+        url_donor = f"{x}/donors"
+        print("===== Start Scrolling Donor Page =====")
+        scroll.scroll_donor(url_donor)
+        if scroll.validate_url:
+            print("\n===== Finish Scrolling Donor Page =====")
+            print("===== Start Scraping Donor Page =====")
+            scrap.scrap_donor(scroll.page_soup_donor, url_donor)
+            print("===== Finish Scraping Donor Page =====")
+            print("===== Start Writing Donor Page =====")
+            write.write_donor(file_name_write_donor, scrap.list_scrap_time, scrap.list_donatur, scrap.list_donasi,
+                              scrap.list_donor_time, scrap.list_url_donor)
+            print("===== Finish Writing Donor Page =====")
+        else:
+            print("===== Finish Scrolling Donor Page =====")
 
         # Remove url that has been scraped from the list_remainder
         for url in list_url:
@@ -135,6 +139,6 @@ else:
         print("===== All Remainder Url Has Been Scraped =====")
         print("===== Finish Checking File Remainder =====")
 
-    # Create summary from file detail
+    # Create summary from file donor
     print("==== Scraped data =====")
-    summary.Summary().summary(file_name_write_detail)
+    summary.Summary().summary_donor(file_name_write_donor)

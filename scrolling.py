@@ -1,20 +1,31 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
 import datetime
+import sys
 
 
 class Scrolling:
     def __init__(self):
         self.service = ChromeService(executable_path=ChromeDriverManager().install())
+        self.opts = Options()
+        self.opts.add_argument("--headless")
+        self.opts.add_argument("--no-sandbox")
+        self.opts.add_argument("--window-size=1420,1080")
+        self.opts.add_argument("--disable-gpu")
+        self.opts.add_argument(
+            "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36")
+
         self.page_soup = ""
         self.page_soup_detail = ""
+        self.page_soup_donor = ""
+        self.validate_url = True
 
     def scroll(self, url):
-        # service = ChromeService(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=self.service)
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(f"{url}")
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
@@ -50,6 +61,7 @@ class Scrolling:
             # Break the loop
             # Case temp is really equal to our div collection
             if len(items) == temp:
+                print("==========================================")
                 print("===== Double check in progress!! =====")
                 # Make sure its already in the end of page (not still in loading content)
                 time.sleep(20)
@@ -58,6 +70,7 @@ class Scrolling:
 
                 if len(items) == temp:
                     print("===== Double checked, Done!! =====")
+                    print("==========================================")
                     break
                 else:
                     print("===== Got another data, Continue to scrolling page!! =====")
@@ -81,11 +94,10 @@ class Scrolling:
         driver.close()
 
     def scroll_detail(self, url_detail):
-        # service = ChromeService(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=self.service)
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(url_detail)
         time.sleep(2)  # Allow 2 seconds for the web page to open
-        scroll_pause_time = 1  # You can set your own pause time
+        scroll_pause_time = 3  # You can set your own pause time
         screen_height = driver.execute_script("return window.screen.height;")  # Get the screen height of the web
 
         i = 1
@@ -110,72 +122,77 @@ class Scrolling:
                 if "tahun" in x.text:
                     flag = False
                     break
-            if flag == False:
+            if not flag:
                 break
 
         self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
         driver.close()
 
-    def scroll_donor(self, url_detail):
-        # service = ChromeService(executable_path=ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=self.service)
-        driver.get(url_detail)
+    def scroll_donor(self, url_donor):
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
+        driver.get(url_donor)
         time.sleep(2)  # Allow 2 seconds for the web page to open
-        scroll_pause_time = 1  # You can set your own pause time
-        screen_height = driver.execute_script("return window.screen.height;")  # Get the screen height of the web
+        scroll_pause_time = 3  # You can set your own pause time
 
-        i = 1
-        flag = True
-        now = datetime.datetime.now().strftime("%d/%m/%Y")
-        month = int(now.split(sep="/")[1])
-        while True:
-            # Scroll one screen height each time
-            driver.execute_script(
-                "window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
-            i += 1
-            time.sleep(scroll_pause_time)
-            # Update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
-            scroll_height = driver.execute_script("return document.body.scrollHeight;")
+        if driver.current_url != url_donor:
+            self.validate_url = False
+            driver.close()
+        else:
+            screen_height = driver.execute_script("return window.screen.height;")  # Get the screen height of the web
 
-            # Break the loop when the height we need to scroll to is larger than the total scroll height
-            if screen_height * i > scroll_height:
-                break
+            i = 1
+            flag = True
+            month_dic = {"Januari": "1", "Februari": "2", "Maret": "3", "April": "4", "Mei": "5", "Juni": "6",
+                         "Juli": "7",
+                         "Agustus": "8", "September": "9", "Oktober": "10", "November": "11", "Desember": "12"}
+            now = datetime.datetime.now()
+            while True:
+                # Scroll one screen height each time
+                driver.execute_script(
+                    "window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))
+                time.sleep(scroll_pause_time)
 
-            # Break the loop when meet certain reference month in current quarter (t-1)
-            self.page_soup = BeautifulSoup(driver.page_source, "html.parser")
-            reference = self.page_soup.find_all(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
-            for x in reference:
-                month_scrap = x.text.split(sep=" ")[1].strip()
-                if (month - 1 >= 1) and (month - 1 <= 3):
-                    month_range = "Januari, Februari, Maret"
-                    if month_scrap in month_range:
-                        continue
-                    else:
-                        flag = False
-                        break
-                elif (month - 1 >= 4) and (month - 1 <= 6):
-                    month_range = "April, Mei, Juni"
-                    if month_scrap in month_range:
-                        continue
-                    else:
-                        flag = False
-                        break
-                elif (month - 1 >= 7) and (month - 1 <= 9):
-                    month_range = "Juli, Agustus, September"
-                    if month_scrap in month_range:
-                        continue
-                    else:
-                        flag = False
-                        break
-                elif (month - 1 >= 10) and (month - 1 <= 12):
-                    month_range = "Oktober, November, Desember"
-                    if month_scrap in month_range:
-                        continue
-                    else:
-                        flag = False
-                        break
-            if flag == False:
-                break
+                # Update scroll height each time after scrolled, as the scroll height can change
+                # after we scrolled the page
+                scroll_height = driver.execute_script("return document.body.scrollHeight;")
 
-        self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
-        driver.close()
+                # Break the loop when the height we need to scroll to is larger than the total scroll height
+                if screen_height * i > scroll_height:
+                    if i == 1:
+                        sys.stdout.write(f"\r===== Nothing to Scroll =====")
+                        sys.stdout.flush()
+                    break
+
+                # Break the loop when content a specified word (in this case is "one year from now")
+                self.page_soup = BeautifulSoup(driver.page_source, "html.parser")
+                reference = self.page_soup.find_all(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
+                if reference:
+                    for x in reference:
+                        date = x.text
+                        tahun = int(date.split(sep=" ")[2])
+
+                        split_date = date.split(sep=" ")
+                        scrap_date = "/".join(split_date[0:3])
+                        modify_date = scrap_date.replace(" ", "/").replace(date.split(sep=" ")[1],
+                                                                           month_dic[date.split(sep=" ")[1]])
+                        convert_date = datetime.datetime.strptime(modify_date, "%d/%m/%Y")
+                        delta_date = now - convert_date
+
+                        sys.stdout.write(f"\r===== Scrolling {i} ({delta_date.days} days) =====")
+                        sys.stdout.flush()
+
+                        if (delta_date.days >= 365 and tahun % 4 == 0) or (delta_date.days >= 366 and tahun % 4 != 0):
+                            flag = False
+                            break
+                    if not flag:
+                        break
+
+                    i += 1
+                else:
+                    sys.stdout.write(f"\r===== Blank Page =====")
+                    sys.stdout.flush()
+                    break
+
+            self.page_soup_donor = BeautifulSoup(driver.page_source, "html.parser")
+            self.validate_url = True
+            driver.close()

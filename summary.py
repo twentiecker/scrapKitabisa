@@ -80,3 +80,77 @@ class Summary:
 
         file_name = file_name.replace("detail", "summary")
         write.write_summary(file_name, list_summary)
+
+    def summary_donor(self, file_name):
+        list_summary = []
+
+        read = reading.Reading()
+        write = writing.Writing()
+
+        read.read_donor(file_name)
+        rows = read.list_donor
+
+        quarter_dic = {"Januari": 1, "Februari": 1, "Maret": 1, "April": 2, "Mei": 2, "Juni": 2, "Juli": 3,
+                       "Agustus": 3, "September": 3, "Oktober": 4, "November": 4, "Desember": 4}
+
+        quarter_anchor_dic = {"01": 1, "02": 1, "03": 1, "04": 2, "05": 2, "06": 2, "07": 3, "08": 3, "09": 3, "10": 4,
+                              "11": 4, "12": 4}
+
+        anchor_month = rows[0].split(sep="/")[1]
+        anchor_date = rows[0].split(sep="/")[2]
+        anchor_year = int(anchor_date.split(sep=",")[0])
+
+        tw1 = 0
+        tw2 = 0
+        tw3 = 0
+        tw4 = 0
+
+        for x in rows:
+            row_date = x.split(sep=";")[3]  # Get date
+            row_month = row_date.split(sep=" ")[1]  # Get month
+            row_year = int(row_date.split(sep=" ")[2])  # Get year
+
+            # Filter for below the quarter anchor
+            if quarter_dic[row_month] <= quarter_anchor_dic[anchor_month] and row_year <= anchor_year - 1:
+                continue
+
+            # Filter for above the quarter anchor
+            if quarter_dic[row_month] > quarter_anchor_dic[anchor_month] and row_year < anchor_year - 1:
+                continue
+
+            row_donasi = x.split(sep=";")[2]
+
+            if quarter_dic[row_month] == 1:
+                tw1 += int(row_donasi)
+            elif quarter_dic[row_month] == 2:
+                tw2 += int(row_donasi)
+            elif quarter_dic[row_month] == 3:
+                tw3 += int(row_donasi)
+            elif quarter_dic[row_month] == 4:
+                tw4 += int(row_donasi)
+
+            print(f"Tw{quarter_dic[row_month]};{x}")
+
+        if (int(anchor_month) >= 1) and (int(anchor_month) <= 3):
+            list_summary.append(f"Triwulan I {anchor_year};{tw1}")
+            list_summary.append(f"Triwulan IV {anchor_year - 1};{tw4}")
+            list_summary.append(f"Triwulan III {anchor_year - 1};{tw3}")
+            list_summary.append(f"Triwulan II {anchor_year - 1};{tw2}")
+        elif (int(anchor_month) >= 4) and (int(anchor_month) <= 6):
+            list_summary.append(f"Triwulan II {anchor_year};{tw2}")
+            list_summary.append(f"Triwulan I {anchor_year};{tw1}")
+            list_summary.append(f"Triwulan IV {anchor_year - 1};{tw4}")
+            list_summary.append(f"Triwulan III {anchor_year - 1};{tw3}")
+        elif (int(anchor_month) >= 7) and (int(anchor_month) <= 9):
+            list_summary.append(f"Triwulan III {anchor_year};{tw3}")
+            list_summary.append(f"Triwulan II {anchor_year};{tw2}")
+            list_summary.append(f"Triwulan I {anchor_year};{tw1}")
+            list_summary.append(f"Triwulan IV {anchor_year - 1};{tw4}")
+        elif (int(anchor_month) >= 10) and (int(anchor_month) <= 12):
+            list_summary.append(f"Triwulan IV {anchor_year};{tw4}")
+            list_summary.append(f"Triwulan III {anchor_year};{tw3}")
+            list_summary.append(f"Triwulan II {anchor_year};{tw2}")
+            list_summary.append(f"Triwulan I {anchor_year};{tw1}")
+
+        file_name = file_name.replace("donor", "summary")
+        write.write_summary(file_name, list_summary)

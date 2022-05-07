@@ -20,6 +20,13 @@ class Writing:
                     f"{list_update_content_p[i]};{list_update_content_div[i]};{list_url_scrapping[i]}\n")
         f.close()
 
+    def write_donor(self, file_name, list_scrap_time, list_donatur, list_donasi, list_time_donor, list_url_donor):
+        f = open(f"{file_name}.csv", "a+", encoding="utf-8")  # open/create file and then append some item (a+)
+        for i in range(len(list_scrap_time)):
+            f.write(f"{list_scrap_time[i]};{list_donatur[i]};{list_donasi[i]};{list_time_donor[i]};"
+                    f"{list_url_donor[i]}\n")
+        f.close()
+
     def write_summary(self, file_name, list_summary):
         f = open(f"{file_name}.csv", "w+", encoding="utf-8")  # open/create file and then append some item (a+)
         for i in range(len(list_summary)):
