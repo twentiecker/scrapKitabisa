@@ -7,11 +7,13 @@ import summary
 import writing
 import reading
 
+url = input("Masukkan link url kitabisa partners yang akan di scraping: ")
+
 print("===== Start Initialize =====")
 # url = "https://galangdana.kitabisa.com/partners/bersamalawancorona"  # BersamaLawanCorona
 # url = "https://galangdana.kitabisa.com/partners/daruratcovid2021"  # DaruratCOVID2021
 # url = "https://galangdana.kitabisa.com/partners/perempuanhadapicovid"  # PerempuanHadapiCovid
-url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
+# url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
 # url = "https://galangdana.kitabisa.com/partners/kickandyheroes"  # Kick Andy Heroes_detail
 # url = "https://galangdana.kitabisa.com/partners/msract"  # Lets ACT Indonesia
 # url = "https://galangdana.kitabisa.com/partners/millennialsberkarya"  # Millennials Berkarya - Semen Indonesia
