@@ -106,6 +106,14 @@ class Scraping:
             self.list_update_content_div.append(update_content_div)
 
     def scrap_donor(self, page_soup_donor, url_donor):
+        # Set empty array
+        self.list_donatur = []
+        self.list_donasi = []
+        self.list_donor_time = []
+        self.list_url_donor = []
+        self.list_scrap_time = []
+
+        # Content container
         content_soup = page_soup_donor.find_all("div", {"class": "style__DonorItem-sc-__sc-1exee2-4 fJHQYT"})
         for x in content_soup:
             donatur = x.find(class_="style__DonorName-sc-__sc-1exee2-7 dlOQEY")

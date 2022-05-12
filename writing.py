@@ -1,6 +1,6 @@
 class Writing:
     def write(self, file_name, list_campaign_name, list_campaign_fundriser, list_campaign_donation, list_campaign_url):
-        f = open(f"{file_name}.csv", "a+", encoding="utf-8")  # open/create file and then append some item (a+)
+        f = open(f"{file_name}.csv", "w+", encoding="utf-8")  # open/create file and then append some item (a+)
         for i in range(len(list_campaign_name)):
             f.write(f"{list_campaign_name[i]};{list_campaign_fundriser[i]};{list_campaign_donation[i]};"
                     f"{list_campaign_url[i]}\n")
