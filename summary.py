@@ -32,7 +32,11 @@ class Summary:
 
             if "hari" in z:
                 # Selection for positive value of m_convert
-                m_convert = date - int(z.split()[0])
+                if "sehari" in z:
+                    m_convert = date - 1
+                else:
+                    m_convert = date - int(z.split()[0])
+
                 if m_convert < 0:
                     m_convert = month - 1
                 else:
