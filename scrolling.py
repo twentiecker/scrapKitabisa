@@ -26,7 +26,7 @@ class Scrolling:
         self.validate_url = True
 
     def scroll(self, url):
-        driver = webdriver.Chrome(service=self.service, options=self.opts)
+        driver = webdriver.Chrome(service=self.service)
         driver.get(f"{url}")
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
@@ -82,7 +82,7 @@ class Scrolling:
             if len(items) == temp_eq:
                 i_temp += 1
                 temp_eq2 = temp_eq
-                print("===== Attempt waiting to loaded page =====")
+                print("===== Attempt waiting to load page =====")
                 print(f"Re-attempt: {i_temp - 1}")
                 if i_temp == 10:
                     print("===== Page is fully loaded, Done!! =====")
@@ -98,59 +98,66 @@ class Scrolling:
         driver.close()
 
     def scroll_detail(self, url_detail):
-        driver = webdriver.Chrome(service=self.service, options=self.opts)
+        driver = webdriver.Chrome(service=self.service)
         driver.get(url_detail)
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
 
-        # Define scrollable tag/div
-        scrollable_div = driver.find_element(By.TAG_NAME, "html")
+        if driver.current_url != url_detail:
+            self.validate_url = False
+            print("===== Wrong url!! =====")
+            driver.close()
+        else:
+            # Define scrollable tag/div
+            scrollable_div = driver.find_element(By.TAG_NAME, "html")
 
-        scroll_height_verify = 0
-        i = 1
-        flag = True
+            scroll_height_verify = 0
+            i = 1
+            flag = True
 
-        while True:
-            # Scroll to the bottom
-            driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
-            time.sleep(scroll_pause_time)
+            while True:
+                # Scroll to the bottom
+                driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', scrollable_div)
+                time.sleep(scroll_pause_time)
 
-            # Update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
-            scroll_height = driver.execute_script("return document.body.scrollHeight;")
+                # Update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
+                scroll_height = driver.execute_script("return document.body.scrollHeight;")
 
-            self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
-            reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
-            if reference:
-                # Break the loop when the height is not increasing anymore
-                if scroll_height_verify == scroll_height:
-                    break
-
-                # Break the loop when find word "tahun"
-                for x in reference:
-                    sys.stdout.write(f"\r===== Scrolling count: {i} ({x.text}) =====")
-                    sys.stdout.flush()
-                    if "tahun" in x.text:
-                        flag = False
+                self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
+                reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
+                if reference:
+                    # Break the loop when the height is not increasing anymore
+                    if scroll_height_verify == scroll_height:
                         break
-                if not flag:
-                    break
 
-                scroll_height_verify = scroll_height
-                i += 1
-            else:
-                sys.stdout.write("\r===== Blank Page =====")
-                sys.stdout.flush()
-                break
-        driver.close()
+                    # Break the loop when find word "tahun"
+                    for x in reference:
+                        sys.stdout.write(f"\r===== Scrolling count: {i} ({x.text}) =====")
+                        sys.stdout.flush()
+                        if "tahun" in x.text:
+                            flag = False
+                            break
+                    if not flag:
+                        break
+
+                    scroll_height_verify = scroll_height
+                    i += 1
+                else:
+                    sys.stdout.write("\r===== Blank Page =====")
+                    sys.stdout.flush()
+                    break
+            self.validate_url = True
+            driver.close()
 
     def scroll_donor(self, url_donor):
-        driver = webdriver.Chrome(service=self.service, options=self.opts)
+        driver = webdriver.Chrome(service=self.service)
         driver.get(url_donor)
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
 
         if driver.current_url != url_donor:
             self.validate_url = False
+            print("===== Wrong url!! =====")
             driver.close()
         else:
             i = 1

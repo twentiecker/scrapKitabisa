@@ -10,23 +10,25 @@ import time
 
 
 class Latest:
-    def latest_scrap(self):
+    def scrap_latest(self):
         list_url = tuple(read.list_url)
         for x in list_url:
             print(f"{x}/latest-news")
             url_detail = f"{x}/latest-news"
             print("===== Start Scrolling Detail Page =====")
             scroll.scroll_detail(url_detail)
-            print("\n===== Finish Scrolling Detail Page =====")
-            print("===== Start Scraping Detail Page =====")
-            scrap.scrap_detail(scroll.page_soup_detail, url_detail)
-            print("===== Finish Scraping Detail Page =====")
-            print("===== Start Writing Detail Page =====")
-            write.write_detail(file_name_write_detail, scrap.list_time, scrap.list_publisher_name,
-                               scrap.list_update_time,
-                               scrap.list_update_content_h4, scrap.list_update_content_p, scrap.list_update_content_div,
-                               scrap.list_url_scrapping)
-            print("===== Finish Writing Detail Page =====")
+            if scroll.validate_url:
+                print("\n===== Finish Scrolling Detail Page =====")
+                print("===== Start Scraping Detail Page =====")
+                scrap.scrap_detail(scroll.page_soup_detail, url_detail)
+                print("===== Finish Scraping Detail Page =====")
+                print("===== Start Writing Detail Page =====")
+                write.write_detail(file_name_write_detail, scrap.list_time, scrap.list_publisher_name,
+                                   scrap.list_update_time, scrap.list_update_content_h4, scrap.list_update_content_p,
+                                   scrap.list_update_content_div, scrap.list_url_scrapping)
+                print("===== Finish Writing Detail Page =====")
+            else:
+                print("===== Finish Scrolling Detail Page =====")
 
             # Remove url that has been scraped from the list_remainder
             for url in list_url:
@@ -93,7 +95,7 @@ if os.path.isfile(f"./{file_name_write_url_remainder}.csv"):  # Check file_name_
     read.read(file_name_write_url_remainder)
     print("===== Finish Reading Remainder =====")
 
-    Latest().latest_scrap()
+    Latest().scrap_latest()
 
 else:
     print("===== Start Scrolling =====")
@@ -111,7 +113,7 @@ else:
     read.read(file_name_write_url)
     print("===== Finish Reading =====")
 
-    Latest().latest_scrap()
+    Latest().scrap_latest()
 
 end = time.time()
 print(f"===== Elapsed time {time.strftime('%H:%M:%S', time.gmtime(end - start))} =====")
