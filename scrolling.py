@@ -26,7 +26,7 @@ class Scrolling:
         self.validate_url = True
 
     def scroll(self, url):
-        driver = webdriver.Chrome(service=self.service)
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(f"{url}")
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
@@ -98,7 +98,7 @@ class Scrolling:
         driver.close()
 
     def scroll_detail(self, url_detail):
-        driver = webdriver.Chrome(service=self.service)
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(url_detail)
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
@@ -150,7 +150,7 @@ class Scrolling:
             driver.close()
 
     def scroll_donor(self, url_donor):
-        driver = webdriver.Chrome(service=self.service)
+        driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(url_donor)
         time.sleep(2)  # Allow 2 seconds for the web page to open
         scroll_pause_time = 3  # You can set your own pause time
