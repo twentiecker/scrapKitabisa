@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+import undetected_chromedriver as uc
 import time
 import datetime
 import sys
@@ -26,10 +27,10 @@ class Scrolling:
         self.validate_url = True
 
     def scroll(self, url):
-        driver = webdriver.Chrome(service=self.service, options=self.opts)
+        driver = uc.Chrome(use_subprocess=True)
         driver.get(f"{url}")
-        time.sleep(2)  # Allow 2 seconds for the web page to open
-        scroll_pause_time = 3  # You can set your own pause time
+        time.sleep(3)  # Allow 3 seconds for the web page to open
+        scroll_pause_time = 6  # You can set your own pause time
 
         # Get initial info from this page
         self.page_soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -101,7 +102,7 @@ class Scrolling:
         driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(url_detail)
         time.sleep(2)  # Allow 2 seconds for the web page to open
-        scroll_pause_time = 3  # You can set your own pause time
+        scroll_pause_time = 6  # You can set your own pause time
 
         if driver.current_url != url_detail:
             self.validate_url = False
@@ -153,7 +154,7 @@ class Scrolling:
         driver = webdriver.Chrome(service=self.service, options=self.opts)
         driver.get(url_donor)
         time.sleep(2)  # Allow 2 seconds for the web page to open
-        scroll_pause_time = 3  # You can set your own pause time
+        scroll_pause_time = 6  # You can set your own pause time
 
         if driver.current_url != url_donor:
             self.validate_url = False
