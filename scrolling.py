@@ -124,29 +124,32 @@ class Scrolling:
                 # Update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
                 scroll_height = driver.execute_script("return document.body.scrollHeight;")
 
+                # Break the loop when content a specified date (in this case is "one year from scraping date")
                 self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
                 reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
                 if reference:
-                    # Break the loop when the height is not increasing anymore
-                    if scroll_height_verify == scroll_height:
-                        break
-
-                    # Break the loop when find word "tahun"
                     for x in reference:
                         sys.stdout.write(f"\r===== Scrolling count: {i} ({x.text}) =====")
                         sys.stdout.flush()
+
+                        # Break the loop when find word "tahun"
                         if "tahun" in x.text:
                             flag = False
                             break
                     if not flag:
                         break
 
-                    scroll_height_verify = scroll_height
                     i += 1
                 else:
                     sys.stdout.write("\r===== Blank Page =====")
                     sys.stdout.flush()
                     break
+
+                # Break the loop when the height is not increasing anymore
+                if scroll_height_verify == scroll_height:
+                    break
+
+                scroll_height_verify = scroll_height
             self.validate_url = True
             driver.close()
 
@@ -161,16 +164,17 @@ class Scrolling:
             print("===== Wrong url!! =====")
             driver.close()
         else:
+            # Define scrollable tag/div
+            scrollable_div = driver.find_element(By.TAG_NAME, "html")
+
+            scroll_height_verify = 0
             i = 1
             flag = True
-            scroll_height_verify = 0
+
             now = datetime.datetime.now()
             month_dic = {"Januari": "1", "Februari": "2", "Maret": "3", "April": "4", "Mei": "5", "Juni": "6",
                          "Juli": "7", "Agustus": "8", "September": "9", "Oktober": "10", "November": "11",
                          "Desember": "12"}
-
-            # Define scrollable tag/div
-            scrollable_div = driver.find_element(By.TAG_NAME, "html")
 
             while True:
                 # Scroll to the bottom
@@ -180,7 +184,7 @@ class Scrolling:
                 # Update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
                 scroll_height = driver.execute_script("return document.body.scrollHeight;")
 
-                # Break the loop when content a specified word (in this case is "one year from now")
+                # Break the loop when content a specified date (in this case is "one year from scraping date")
                 self.page_soup_donor = BeautifulSoup(driver.page_source, "html.parser")
                 reference = self.page_soup_donor.find_all(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
                 if reference:
@@ -198,6 +202,7 @@ class Scrolling:
                         sys.stdout.write(f"\r===== Scrolling count: {i} ({delta_date.days} days) =====")
                         sys.stdout.flush()
 
+                        # Break the loop when difference date more than 365 or 366 (depend on "kabisat year" or not)
                         if (delta_date.days >= 365 and tahun % 4 == 0) or (delta_date.days >= 366 and tahun % 4 != 0):
                             flag = False
                             break

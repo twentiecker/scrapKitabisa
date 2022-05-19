@@ -59,18 +59,6 @@ url = input("Masukkan link url kitabisa partners yang akan di scraping: ")
 
 start = time.time()
 print("===== Start Initialize =====")
-# url = "https://galangdana.kitabisa.com/partners/bersamalawancorona"  # BersamaLawanCorona
-# url = "https://galangdana.kitabisa.com/partners/daruratcovid2021"  # DaruratCOVID2021
-# url = "https://galangdana.kitabisa.com/partners/perempuanhadapicovid"  # PerempuanHadapiCovid
-# url = "https://galangdana.kitabisa.com/partners/gogive-catalogue-home"  # GoGive catalogue home
-# url = "https://galangdana.kitabisa.com/partners/kickandyheroes"  # Kick Andy Heroes_detail
-# url = "https://galangdana.kitabisa.com/partners/msract"  # Lets ACT Indonesia
-# url = "https://galangdana.kitabisa.com/partners/millennialsberkarya"  # Millennials Berkarya - Semen Indonesia
-# url = "https://galangdana.kitabisa.com/partners/oxygenforindonesia"  # Oxygen for Indonesia
-# url = "https://galangdana.kitabisa.com/partners/bisabantusesama"  # Program #BisaBantuSesama
-# url = "https://galangdana.kitabisa.com/partners/ramadhan2021"  # Ramadhan Bersama Kitabisa #SalingJaga
-# url = "https://galangdana.kitabisa.com/partners/zakathub"  # ZakatHub by BAZNAS
-
 uClient = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 page_html = urlopen(uClient).read()
 page_soup = Soup(page_html, "html.parser")
@@ -85,7 +73,6 @@ scroll = scrolling.Scrolling()
 scrap = scraping.Scraping()
 write = writing.Writing()
 read = reading.Reading()
-
 print("===== Finish Initialize =====")
 
 if os.path.isfile(f"./{file_name_write_url_remainder}.csv"):  # Check file_name_write_url_remainder
