@@ -100,10 +100,10 @@ class Summary:
             try:
                 df_rows = df.partitions[i].compute().values
                 rows = df_rows.tolist()  # convert numpy array to normal array
-                scrap_date = rows[0][0]  # scrap_date
-                anchor_month = scrap_date.split(sep="/")[1]
-                anchor_date = scrap_date.split(sep="/")[2]
-                anchor_year = int(anchor_date.split(sep=",")[0])
+                # scrap_date = rows[0][0]  # scrap_date
+                # anchor_month = scrap_date.split(sep="/")[1]
+                # anchor_date = scrap_date.split(sep="/")[2]
+                # anchor_year = int(anchor_date.split(sep=",")[0])
 
                 quarter_dic = {"Januari": 1, "Februari": 1, "Maret": 1, "April": 2, "Mei": 2, "Juni": 2, "Juli": 3,
                                "Agustus": 3, "September": 3, "Oktober": 4, "November": 4, "Desember": 4}
@@ -113,6 +113,12 @@ class Summary:
 
                 list_summary = []
                 for x in rows:
+                    scrap_date = x[0]
+                    # print(scrap_date)
+                    anchor_month = scrap_date.split(sep="/")[1]
+                    anchor_date = scrap_date.split(sep="/")[2]
+                    anchor_year = int(anchor_date.split(sep=",")[0])
+
                     row_date = x[3].split(sep=" ")  # Get date
                     row_month = row_date[1]  # Get month
                     row_year = int(row_date[2])  # Get year
