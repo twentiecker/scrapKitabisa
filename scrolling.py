@@ -58,35 +58,35 @@ class Scrolling:
             self.page_soup = BeautifulSoup(driver.page_source, "html.parser")
             items = self.page_soup.find_all("div", class_="m-card")
 
-            print(f"Data scraped: {len(items)}")
-            print(f"Total campaigns (to scraped): {temp}")
-            print(f"Scrolling count: {i}")
+            print(f"Data Scraped: {len(items)}")
+            print(f"Total Campaigns (to Scraped): {temp}")
+            print(f"Scrolling Count: {i}")
 
             # Break the loop when temp is really equal to our div collection
             if len(items) == temp:
                 print("==========================================")
-                print("===== Double check in progress!! =====")
+                print("===== Double Check in Progress!! =====")
                 # Make sure its already in the end of page (not still in loading content)
                 time.sleep(20)
                 self.page_soup = BeautifulSoup(driver.page_source, "html.parser")
                 items = self.page_soup.find_all("div", class_="m-card")
 
                 if len(items) == temp:
-                    print("===== Double check is done!! =====")
+                    print("===== Double Check is Done!! =====")
                     print("==========================================")
                     break
                 else:
-                    print("===== Got another data, Continue to scrolling page!! =====")
+                    print("===== Got Another Data, Continue to Scrolling Page!! =====")
                     continue
 
             # Break the loop when temp not equal to our div collection but it was already in the end of page
             if len(items) == temp_eq:
                 i_temp += 1
                 temp_eq2 = temp_eq
-                print("===== Attempt waiting to load page =====")
-                print(f"Re-attempt: {i_temp - 1}")
+                print("===== Attempt Waiting to Load Page =====")
+                print(f"Re-Attempt: {i_temp - 1}")
                 if i_temp == 10:
-                    print("===== Page is fully loaded, Done!! =====")
+                    print("===== Page is Fully Loaded, Done!! =====")
                     break
             temp_eq = len(items)
 
@@ -106,7 +106,7 @@ class Scrolling:
 
         if driver.current_url != url_detail:
             self.validate_url = False
-            print("===== Wrong url!! =====")
+            print("===== Wrong Url!! =====")
             driver.close()
         else:
             # Define scrollable tag/div
@@ -129,12 +129,14 @@ class Scrolling:
                 reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
                 if reference:
                     for x in reference:
-                        sys.stdout.write(f"\r===== Scrolling count: {i} ({x.text}) =====")
+                        sys.stdout.write(f"\r===== Scrolling Count: {i} ({x.text}) =====")
                         sys.stdout.flush()
 
                         # Break the loop when find word "tahun"
                         if "tahun" in x.text:
                             flag = False
+                            sys.stdout.write(f"\n===== Date limit Reached =====")
+                            sys.stdout.flush()
                             break
                     if not flag:
                         break
@@ -147,7 +149,15 @@ class Scrolling:
 
                 # Break the loop when the height is not increasing anymore
                 if scroll_height_verify == scroll_height:
-                    break
+                    time.sleep(20)
+                    scroll_height = driver.execute_script("return document.body.scrollHeight;")
+                    if scroll_height_verify == scroll_height:
+                        sys.stdout.write(f"\n===== Bottom Page Reached =====")
+                        sys.stdout.flush()
+                        break
+                    else:
+                        print("\n===== Got Another Data, Continue to Scrolling Page!! =====")
+                        continue
 
                 scroll_height_verify = scroll_height
             self.validate_url = True
@@ -161,7 +171,7 @@ class Scrolling:
 
         if driver.current_url != url_donor:
             self.validate_url = False
-            print("===== Wrong url!! =====")
+            print("===== Wrong Url!! =====")
             driver.close()
         else:
             # Define scrollable tag/div
@@ -199,12 +209,14 @@ class Scrolling:
                         convert_date = datetime.datetime.strptime(modify_date, "%d/%m/%Y")
                         delta_date = now - convert_date
 
-                        sys.stdout.write(f"\r===== Scrolling count: {i} ({delta_date.days} days) =====")
+                        sys.stdout.write(f"\r===== Scrolling Count: {i} ({delta_date.days} days) =====")
                         sys.stdout.flush()
 
                         # Break the loop when difference date more than 365 or 366 (depend on "kabisat year" or not)
                         if (delta_date.days >= 365 and tahun % 4 == 0) or (delta_date.days >= 366 and tahun % 4 != 0):
                             flag = False
+                            sys.stdout.write(f"\n===== Date limit Reached =====")
+                            sys.stdout.flush()
                             break
                     if not flag:
                         break
@@ -217,7 +229,15 @@ class Scrolling:
 
                 # Break the loop when the height is not increasing anymore
                 if scroll_height_verify == scroll_height:
-                    break
+                    time.sleep(20)
+                    scroll_height = driver.execute_script("return document.body.scrollHeight;")
+                    if scroll_height_verify == scroll_height:
+                        sys.stdout.write(f"\n===== Bottom Page Reached =====")
+                        sys.stdout.flush()
+                        break
+                    else:
+                        print("\n===== Got Another Data, Continue to Scrolling Page!! =====")
+                        continue
 
                 scroll_height_verify = scroll_height
             self.validate_url = True
