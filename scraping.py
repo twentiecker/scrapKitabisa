@@ -68,42 +68,43 @@ class Scraping:
         self.list_url_scrapping = []
 
         # Content container
-        content_soup = page_soup_detail.find_all("div", {"class": "style__TimelineItem-sc-__sc-bl8jwv-3 kGnabC"})
+        content_soup = page_soup_detail.find_all("div", {"class": "style__TimelineItem-sc-__sc-bl8jwv-3"})
         for x in content_soup:
-            reference_time = x.find(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR").text
-            if "tahun" in reference_time:
-                continue
-
-            # Publisher name
-            publisher_name = x.find(class_="style__PublisherName-sc-__sc-bl8jwv-7 kiEwbb")
-            self.list_publisher_name.append(publisher_name.text.strip())
-            self.list_time.append(datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
-            self.list_url_scrapping.append(url_detail)
-
-            # Update time
-            update_time = x.find(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
-            self.list_update_time.append(update_time.text.strip())
-
-            # Content donation
             h4_tag = x.find("h4")
-            update_content_h4 = h4_tag.text.replace("Pencairan Dana Rp ", ""). \
-                replace(".", "").replace("\n", "").replace(",", " ").replace(";", " ").strip()
-            self.list_update_content_h4.append(update_content_h4)
+            if "Pencairan Dana Rp" in h4_tag.text:
+                reference_time = x.find(class_="style__UpdateTime-sc-__sc-bl8jwv-8").text
+                if "tahun" in reference_time:
+                    continue
 
-            # Content account
-            p_tag = x.find("p")
-            if "rekening" in p_tag.text:
-                update_content_p = p_tag.text.replace("\n", " ").replace("rekening", ""). \
-                    replace("ke", "").replace(";", "").strip()
-                self.list_update_content_p.append(update_content_p)
-            else:
-                update_content_p = ""
-                self.list_update_content_p.append(update_content_p)
+                # Publisher name
+                publisher_name = x.find(class_="style__PublisherName-sc-__sc-bl8jwv-7")
+                self.list_publisher_name.append(publisher_name.text.strip())
+                self.list_time.append(datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
+                self.list_url_scrapping.append(url_detail)
 
-            # Content description
-            div_tag = x.find("div")
-            update_content_div = div_tag.text.replace("\n", " ").replace(";", ",").strip()
-            self.list_update_content_div.append(update_content_div)
+                # Update time
+                update_time = x.find(class_="style__UpdateTime-sc-__sc-bl8jwv-8")
+                self.list_update_time.append(update_time.text.strip())
+
+                # Content donation
+                update_content_h4 = h4_tag.text.replace("Pencairan Dana Rp ", ""). \
+                    replace(".", "").replace("\n", "").replace(",", " ").replace(";", " ").strip()
+                self.list_update_content_h4.append(update_content_h4)
+
+                # Content account
+                p_tag = x.find("p")
+                if "rekening" in p_tag.text:
+                    update_content_p = p_tag.text.replace("\n", " ").replace("rekening", ""). \
+                        replace("ke", "").replace(";", "").strip()
+                    self.list_update_content_p.append(update_content_p)
+                else:
+                    update_content_p = ""
+                    self.list_update_content_p.append(update_content_p)
+
+                # Content description
+                div_tag = x.find("div")
+                update_content_div = div_tag.text.replace("\n", " ").replace(";", ",").strip()
+                self.list_update_content_div.append(update_content_div)
 
     def scrap_donor(self, page_soup_donor, url_donor):
         # Set empty array

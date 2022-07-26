@@ -126,7 +126,7 @@ class Scrolling:
 
                 # Break the loop when content a specified date (in this case is "one year from scraping date")
                 self.page_soup_detail = BeautifulSoup(driver.page_source, "html.parser")
-                reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8 lnbfOR")
+                reference = self.page_soup_detail.find_all(class_="style__UpdateTime-sc-__sc-bl8jwv-8")
                 if reference:
                     for x in reference:
                         sys.stdout.write(f"\r===== Scrolling Count: {i} ({x.text}) =====")
