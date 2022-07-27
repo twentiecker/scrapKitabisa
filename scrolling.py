@@ -196,7 +196,7 @@ class Scrolling:
 
                 # Break the loop when content a specified date (in this case is "one year from scraping date")
                 self.page_soup_donor = BeautifulSoup(driver.page_source, "html.parser")
-                reference = self.page_soup_donor.find_all(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
+                reference = self.page_soup_donor.find_all(class_="style__DonationTime-sc-__sc-1exee2-9")
                 if reference:
                     for x in reference:
                         date = x.text

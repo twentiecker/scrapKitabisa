@@ -115,11 +115,11 @@ class Scraping:
         self.list_scrap_time = []
 
         # Content container
-        content_soup = page_soup_donor.find_all("div", {"class": "style__DonorItem-sc-__sc-1exee2-4 fJHQYT"})
+        content_soup = page_soup_donor.find_all("div", {"class": "style__DonorItem-sc-__sc-1exee2-4"})
         for x in content_soup:
-            donatur = x.find(class_="style__DonorName-sc-__sc-1exee2-7 dlOQEY")
-            donasi = x.find(class_="style__DonationAmount-sc-__sc-1exee2-8 fCbsWC")
-            donor_time = x.find(class_="style__DonationTime-sc-__sc-1exee2-9 kBDzcm")
+            donatur = x.find(class_="style__DonorName-sc-__sc-1exee2-7")
+            donasi = x.find(class_="style__DonationAmount-sc-__sc-1exee2-8")
+            donor_time = x.find(class_="style__DonationTime-sc-__sc-1exee2-9")
             self.list_scrap_time.append(datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S"))
             self.list_donatur.append(donatur.text.strip())
             self.list_donasi.append(donasi.text.replace("Rp", "").replace(".", "").strip())
